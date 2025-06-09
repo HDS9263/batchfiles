@@ -1,0 +1,24 @@
+@echo off
+setlocal
+
+:: Check if N drive exists
+if exist N:\ (
+    set "TARGET_DRIVE=N:"
+) else (
+    set "TARGET_DRIVE=C:"
+)
+
+:: Define target directories
+set "FFMPEG_DIR=%TARGET_DRIVE%\LOCAL\Resizer\bin"
+set "BILL_DIR=%TARGET_DRIVE%\bill"
+
+:: Create directories if they don't exist
+if not exist "%FFMPEG_DIR%" mkdir "%FFMPEG_DIR%"
+if not exist "%BILL_DIR%" mkdir "%BILL_DIR%"
+
+:: Download files using BITSAdmin
+bitsadmin /transfer FFMPEGDownload /download /priority foreground "https://nl-promo-assets.s3.dualstack.ap-southeast-2.amazonaws.com/bin/ffmpeg.exe" "%FFMPEG_DIR%\ffmpeg.exe"
+bitsadmin /transfer ALLBatchDownload /download /priority foreground "https://raw.githubusercontent.com/HDS9263/batchfiles/refs/heads/main/ALL.bat" "%BILL_DIR%\ALL.bat"
+
+echo Download complete!
+endlocal
